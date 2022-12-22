@@ -4,6 +4,8 @@ import { ContactForm } from "components/ContactForm/ContactForm";
 import { Filter } from "components/Filter/Filter";
 import { ContactList } from "components/ContactList/ContactList";
 
+const LOCAL_STORAGE_CONTACT = "contactsBook"
+
 export class App extends Component {
   state = {
     contacts: [
@@ -14,6 +16,21 @@ export class App extends Component {
     ],
     filter: "",
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem(LOCAL_STORAGE_CONTACT)
+    const parsedContacts = JSON.parse(contacts)
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts })
+    }
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem(LOCAL_STORAGE_CONTACT, JSON.stringify(this.state.contacts))
+    }
+  }
 
   deleteContact = (contactId) => {
     this.setState((prevState) => ({
